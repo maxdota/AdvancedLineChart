@@ -32,7 +32,7 @@ public class LineChart extends RelativeLayout {
     public static final int[] LINE_COLORS = new int[] {
             0xCCFF0000, 0xCC0000FF, 0xCC006400, 0xCC800000, 0xCCFF8C00, 0xCCFF00FF, 0xCC888888
     };
-    private static final int TOTAL_VERTICAL_CELLS = 5;
+    private static final int TOTAL_VERTICAL_CELLS = 10;
     private static final double CHART_TOP_SPACE_CELL_RATIO = 0.2;
 
     private int mWidth;
@@ -52,6 +52,7 @@ public class LineChart extends RelativeLayout {
     private int mDataCircleRadius;
     private double mMinValue;
     private double mMaxValue;
+    private int mMaxPointsSize;
     private double mValueEachCell;
     private double mPixelPerValue;
     private Typeface mBoldType;
@@ -71,7 +72,7 @@ public class LineChart extends RelativeLayout {
         mTextSize = 20;
         mAxisTextSize = 30;
         mDashHeight = 10;
-        mLeftLabelWidth = 80;
+        mLeftLabelWidth = 100;
         mDataCircleRadius = 6;
         mBoldType = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
         mNormalType = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
@@ -90,7 +91,9 @@ public class LineChart extends RelativeLayout {
         mDataBorderPaint.setAntiAlias(true);
     }
 
-    public void initData(String xAxis, String yAxis, double minValue, double maxValue, List<LineChartData> lines) {
+    public void initData(String xAxis, String yAxis, double minValue, double maxValue,
+                         List<LineChartData> lines, int maxPointsSize) {
+        mMaxPointsSize = maxPointsSize;
         mXAxis = xAxis;
         mYAxis = yAxis;
         mMinValue = minValue;
@@ -125,7 +128,7 @@ public class LineChart extends RelativeLayout {
         mChartLeft = mAxisTextSize + mLeftLabelWidth;
         mChartWidth = mWidth - mChartLeft;
         mChartHeight = mHeight - mTextSize - 2 * mTextMargin - mAxisTextSize;
-        mCellWidth = mChartWidth / mLines.get(0).getPoints().size();
+        mCellWidth = mChartWidth / mMaxPointsSize;
         mCellHeight = (int) (mChartHeight / (TOTAL_VERTICAL_CELLS + CHART_TOP_SPACE_CELL_RATIO));
         mVerticalLabelX = mAxisTextSize + mLeftLabelWidth / 2;
         mHorizontalLabelY = mChartHeight + mTextMargin + mTextSize;
@@ -163,7 +166,7 @@ public class LineChart extends RelativeLayout {
             for (int i = 0; i <= TOTAL_VERTICAL_CELLS; i++) {
                 int y = mChartHeight - mCellHeight * i;
                 canvas.drawLine(mChartLeft - mDashHeight / 2, y, mChartLeft + mDashHeight / 2, y, mLabelPaint);
-                canvas.drawText(String.valueOf(mMinValue + mValueEachCell * i), mVerticalLabelX, y + mTextSize / 2, mLabelPaint);
+                canvas.drawText(String.valueOf(Math.round(mMinValue + mValueEachCell * i)), mVerticalLabelX, y + mTextSize / 2, mLabelPaint);
             }
 
             // axis label

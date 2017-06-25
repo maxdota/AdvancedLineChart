@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AdvancedLineChart</string>
+    <string name="firebase_empty_data_message">Data is empty</string>
+    <string name="data_name_format">Portfolio %d</string>
 </resources>

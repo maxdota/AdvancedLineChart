@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "979291026356",
+    "firebase_url": "https://fir-web-app-4ef19.firebaseio.com",
+    "project_id": "fir-web-app-4ef19",
+    "storage_bucket": "fir-web-app-4ef19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979291026356:android:c74c81062c2287ce",
+        "android_client_info": {
+          "package_name": "com.maxdota.advancedlinechart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979291026356-19tsbq4ejv7ndhu5c36q52urgijokgai.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgJJhEjujGrYkvTI0QtQA7POQoOECXyBI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
