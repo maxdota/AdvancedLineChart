@@ -29,7 +29,7 @@ public class LineChart extends RelativeLayout {
         init();
     }
 
-    public static final int[] LINE_COLORS = new int[] {
+    public static final int[] LINE_COLORS = new int[]{
             0xCCFF0000, 0xCC0000FF, 0xCC006400, 0xCC800000, 0xCCFF8C00, 0xCCFF00FF, 0xCC888888
     };
     private static final int TOTAL_VERTICAL_CELLS = 10;
@@ -40,7 +40,7 @@ public class LineChart extends RelativeLayout {
     private int mChartLeft;
     private int mChartWidth;
     private int mChartHeight;
-    private int mCellWidth;
+    private double mCellWidth;
     private int mCellHeight;
     private int mTextMargin;
     private int mTextSize;
@@ -128,7 +128,7 @@ public class LineChart extends RelativeLayout {
         mChartLeft = mAxisTextSize + mLeftLabelWidth;
         mChartWidth = mWidth - mChartLeft;
         mChartHeight = mHeight - mTextSize - 2 * mTextMargin - mAxisTextSize;
-        mCellWidth = mChartWidth / mMaxPointsSize;
+        mCellWidth = mChartWidth * 1.0 / mMaxPointsSize;
         mCellHeight = (int) (mChartHeight / (TOTAL_VERTICAL_CELLS + CHART_TOP_SPACE_CELL_RATIO));
         mVerticalLabelX = mAxisTextSize + mLeftLabelWidth / 2;
         mHorizontalLabelY = mChartHeight + mTextMargin + mTextSize;
@@ -157,7 +157,7 @@ public class LineChart extends RelativeLayout {
             // horizontal data
             List<LineChartPoint> points = mLines.get(0).getPoints();
             for (int i = 0; i < points.size(); i++) {
-                int x = mChartLeft + mCellWidth / 2 + i * mCellWidth;
+                int x = (int) (mChartLeft + mCellWidth / 2 + i * mCellWidth);
                 canvas.drawLine(x, mChartHeight - mDashHeight / 2, x, mChartHeight + mDashHeight / 2, mLabelPaint);
                 canvas.drawText(points.get(i).getLabel(), x, mHorizontalLabelY, mLabelPaint);
             }
@@ -172,11 +172,11 @@ public class LineChart extends RelativeLayout {
             // axis label
             mLabelPaint.setTextSize(mAxisTextSize);
             mLabelPaint.setTypeface(mBoldType);
-            int x = 0;
+            double x = 0;
             int y = mHeight / 2;
             canvas.save();
-            canvas.rotate(-90, x, y);
-            canvas.drawText(mXAxis, x, y + mAxisTextSize, mLabelPaint);
+            canvas.rotate(-90, (float) x, y);
+            canvas.drawText(mXAxis, (float) x, y + mAxisTextSize, mLabelPaint);
             canvas.restore();
             canvas.drawText(mYAxis, mChartWidth / 2, mHorizontalLabelY + mAxisTextSize + mTextMargin, mLabelPaint);
             mLabelPaint.setTextSize(mTextSize);
@@ -188,17 +188,17 @@ public class LineChart extends RelativeLayout {
                     int color = line.getColor();
                     points = line.getPoints();
                     mDataBorderPaint.setColor(color);
-                    int lastX = mCellWidth / 2 + mChartLeft;
+                    double lastX = mCellWidth / 2 + mChartLeft;
                     int lastY = getYFromValue(points.get(0).getValue());
                     for (int i = 1; i < points.size(); i++) {
                         x = lastX + mCellWidth;
                         y = getYFromValue(points.get(i).getValue());
-                        canvas.drawLine(lastX, lastY, x, y, mDataBorderPaint);
-                        drawCircleData(canvas, lastX, lastY);
+                        canvas.drawLine((float) lastX, lastY, (float) x, y, mDataBorderPaint);
+                        drawCircleData(canvas, (int) lastX, lastY);
                         lastX = x;
                         lastY = y;
                     }
-                    drawCircleData(canvas, lastX, lastY);
+                    drawCircleData(canvas, (int) lastX, lastY);
                 }
             }
         }
