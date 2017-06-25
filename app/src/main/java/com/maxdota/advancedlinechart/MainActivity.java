@@ -2,7 +2,9 @@ package com.maxdota.advancedlinechart;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.maxdota.advancedlinechart.firebase.FirebaseHelper;
@@ -21,6 +23,10 @@ import java.util.ArrayList;
  */
 
 public class MainActivity extends Activity {
+    private enum DisplayType {
+        DAILY, MONTHLY, QUARTERLY
+    }
+
     private FirebaseHelper mFirebaseHelper;
 
     private ArrayList<Portfolio> mPortfolios;
@@ -28,6 +34,7 @@ public class MainActivity extends Activity {
     private double mMinValue;
     private double mMaxValue;
     private int mMaxPointsSize;
+    private DisplayType mDisplayType;
 
     private LineChart mLineChart;
     private LineChartAppendix mLineChartAppendix;
@@ -45,6 +52,23 @@ public class MainActivity extends Activity {
     private void initViews() {
         mLineChart = (LineChart) findViewById(R.id.line_chart);
         mLineChartAppendix = (LineChartAppendix) findViewById(R.id.line_chart_appendix);
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.display_group);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.daily_check:
+                        changeDisplay(DisplayType.DAILY);
+                        break;
+                    case R.id.monthly_check:
+                        changeDisplay(DisplayType.MONTHLY);
+                        break;
+                    case R.id.quarterly_check:
+                        changeDisplay(DisplayType.QUARTERLY);
+                        break;
+                }
+            }
+        });
 
         mLineChartAppendix.setOnAppendixToggleListener(new LineChartAppendix.OnAppendixToggleListener() {
             @Override
@@ -53,6 +77,14 @@ public class MainActivity extends Activity {
                 mLineChart.invalidate();
             }
         });
+    }
+
+    private void changeDisplay(DisplayType displayType) {
+        if (displayType == mDisplayType) {
+            return;
+        }
+        mDisplayType = displayType;
+        processLineData();
     }
 
     private void processFirebaseData() {
@@ -117,5 +149,6 @@ public class MainActivity extends Activity {
 
     private void initData() {
         mFirebaseHelper = FirebaseHelper.getInstance();
+        mDisplayType = DisplayType.DAILY;
     }
 }

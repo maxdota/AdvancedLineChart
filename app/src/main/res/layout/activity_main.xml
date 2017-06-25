@@ -11,6 +11,47 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"/>
 
+    <LinearLayout
+        android:layout_width="@dimen/appendix_width"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/small_distance"
+            android:text="@string/display_label"
+            android:textStyle="bold"/>
+
+        <RadioGroup
+            android:id="@+id/display_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/daily_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/daily"/>
+
+            <RadioButton
+                android:id="@+id/monthly_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/monthly"/>
+
+            <RadioButton
+                android:id="@+id/quarterly_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/quarterly"/>
+        </RadioGroup>
+    </LinearLayout>
+
     <com.maxdota.advancedlinechart.linechart.LineChart
         android:id="@+id/line_chart"
         android:layout_width="match_parent"
