@@ -28,6 +28,14 @@ dependencies {
     compile 'com.google.firebase:firebase-database:11.0.1'
 
     testCompile 'junit:junit:4.12'
+    // needs to exclude the support libraries due to conflicting issue (23.1.1)
+    androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2.2'){
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+        exclude module: 'support-v13'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

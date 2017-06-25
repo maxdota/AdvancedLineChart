@@ -25,6 +25,10 @@ public class Portfolio {
     @Exclude
     private ArrayList<Nav> mQuarterlyNavs;
 
+    public void setNavs(ArrayList<Nav> navs) {
+        mNavs = navs;
+    }
+
     public String getPortfolioId() {
         return mPortfolioId;
     }
@@ -34,6 +38,9 @@ public class Portfolio {
     }
 
     public ArrayList<Nav> getMonthlyNavs() {
+        if (mNavs == null) {
+            return null;
+        }
         if (mMonthlyNavs == null) {
             HashMap<String, Nav> map = new HashMap<>();
             for (Nav nav : mNavs) {
@@ -47,6 +54,9 @@ public class Portfolio {
     }
 
     public ArrayList<Nav> getQuarterlyNavs() {
+        if (mNavs == null) {
+            return null;
+        }
         if (mQuarterlyNavs == null) {
             HashMap<String, Nav> map = new HashMap<>();
             for (Nav nav : mNavs) {
