@@ -18,6 +18,7 @@ import com.maxdota.advancedlinechart.model.Portfolio;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Abc on 25/06/2017.
@@ -32,6 +33,9 @@ public class MainActivity extends Activity {
 
     private ArrayList<Portfolio> mPortfolios;
     private ArrayList<LineChartData> mLines;
+    private ArrayList<String> mLabels;
+    private String mXTitle;
+    private String mYTitle;
     private double mMinValue;
     private double mMaxValue;
     private int mMaxPointsSize;
@@ -94,7 +98,7 @@ public class MainActivity extends Activity {
     }
 
     private void updateChartUi() {
-        mLineChart.initData("Amount", "Years", mMinValue, mMaxValue, mLines, mMaxPointsSize);
+        mLineChart.initData(mYTitle, mXTitle, mMinValue, mMaxValue, mLines, mMaxPointsSize, mLabels);
     }
 
     private void updateAppendix() {
@@ -118,12 +122,15 @@ public class MainActivity extends Activity {
             switch (mDisplayType) {
                 case DAILY:
                     navs = portfolio.getNavs();
+                    mXTitle = getString(R.string.date);
                     break;
                 case MONTHLY:
                     navs = portfolio.getMonthlyNavs();
+                    mXTitle = getString(R.string.month);
                     break;
                 case QUARTERLY:
                     navs = portfolio.getQuarterlyNavs();
+                    mXTitle = getString(R.string.quarter);
                     break;
                 default:
                     navs = new ArrayList<>();
@@ -131,9 +138,6 @@ public class MainActivity extends Activity {
             }
             ArrayList<LineChartPoint> points = new ArrayList<>();
             int size = navs.size();
-            if (size > mMaxPointsSize) {
-                mMaxPointsSize = size;
-            }
             for (int j = 0; j < size; j++) {
                 double amount = navs.get(j).getAmount();
                 points.add(new LineChartPoint("", amount));
@@ -147,6 +151,37 @@ public class MainActivity extends Activity {
             String dataName = getString(R.string.data_name_format, i + 1);
             LineChartData lineChartData = new LineChartData(dataName, LineChart.LINE_COLORS[i], points);
             mLines.add(lineChartData);
+            if (size > mMaxPointsSize) {
+                mMaxPointsSize = size;
+            }
+        }
+
+        // set x-labels for the chart
+        mLabels = new ArrayList<>();
+        switch (mDisplayType) {
+            case DAILY:
+                for (int i = 0; i < mMaxPointsSize; i++) {
+                    // no label when display type is daily
+                    mLabels.add("");
+                }
+                break;
+            case MONTHLY:
+                if (mPortfolios != null && !mPortfolios.isEmpty()) {
+                    // assume the first portfolio has fully data
+                    List<Nav> navs = mPortfolios.get(0).getMonthlyNavs();
+                    for (int i = 0; i < navs.size(); i++) {
+                        mLabels.add(navs.get(i).getDate().substring(0, Portfolio.YEAR_AND_MONTH_LENGTH));
+                    }
+                }
+                break;
+            case QUARTERLY:
+                if (mPortfolios != null && !mPortfolios.isEmpty()) {
+                    // assume the first portfolio has fully data
+                    List<Nav> navs = mPortfolios.get(0).getQuarterlyNavs();
+                    for (int i = 0; i < navs.size(); i++) {
+                        mLabels.add(getString(R.string.quarter_format, navs.get(i).getQuarter()));
+                    }
+                }
         }
     }
 
@@ -172,5 +207,7 @@ public class MainActivity extends Activity {
     private void initData() {
         mFirebaseHelper = FirebaseHelper.getInstance();
         mDisplayType = DisplayType.DAILY;
+        mXTitle = getString(R.string.date);
+        mYTitle = getString(R.string.amount);
     }
 }

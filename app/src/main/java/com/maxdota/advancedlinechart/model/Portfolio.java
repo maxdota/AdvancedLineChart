@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 
 public class Portfolio {
-    private static final int YEAR_AND_MONTH_LENGTH = 7;
+    public static final int YEAR_AND_MONTH_LENGTH = 7;
     private static final int YEAR_LENGTH = 4;
 
     @PropertyName("portfolioId")
@@ -55,26 +55,36 @@ public class Portfolio {
                 keySb.setLength(YEAR_LENGTH);
 
                 String month = date.substring(YEAR_LENGTH + 1, YEAR_AND_MONTH_LENGTH);
+                int quarter;
                 switch (month) {
+                    case "01":
                     case "02":
                     case "03":
-                        month = "01";
+                        quarter = 1;
                         break;
+                    case "04":
                     case "05":
                     case "06":
-                        month = "04";
+                        quarter = 2;
                         break;
+                    case "07":
                     case "08":
                     case "09":
-                        month = "07";
+                        quarter = 3;
                         break;
+                    case "10":
                     case "11":
                     case "12":
-                        month = "10";
+                        quarter = 4;
+                        break;
+                    default:
+                        quarter = 0;
                         break;
                 }
+                // set quarter to use later when labeling the axis
+                nav.setQuarter(quarter);
                 // keySb will be in format year-quarter (e.g. 2017-01)
-                keySb.append("-").append(month);
+                keySb.append("-").append(quarter);
                 map.put(keySb.toString(), nav);
             }
             mQuarterlyNavs = new ArrayList<>(map.values());

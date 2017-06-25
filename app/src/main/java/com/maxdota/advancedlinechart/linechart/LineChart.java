@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,6 +63,7 @@ public class LineChart extends RelativeLayout {
     private Paint mDataPaint;
     private Paint mDataBorderPaint;
 
+    private ArrayList<String> mLabels;
     private List<LineChartData> mLines;
     private String mXAxis;
     private String mYAxis;
@@ -92,7 +94,8 @@ public class LineChart extends RelativeLayout {
     }
 
     public void initData(String xAxis, String yAxis, double minValue, double maxValue,
-                         List<LineChartData> lines, int maxPointsSize) {
+                         List<LineChartData> lines, int maxPointsSize, ArrayList<String> labels) {
+        mLabels = labels;
         mMaxPointsSize = maxPointsSize;
         mXAxis = xAxis;
         mYAxis = yAxis;
@@ -155,11 +158,10 @@ public class LineChart extends RelativeLayout {
             }
 
             // horizontal data
-            List<LineChartPoint> points = mLines.get(0).getPoints();
-            for (int i = 0; i < points.size(); i++) {
+            for (int i = 0; i < mLabels.size(); i++) {
                 int x = (int) (mChartLeft + mCellWidth / 2 + i * mCellWidth);
                 canvas.drawLine(x, mChartHeight - mDashHeight / 2, x, mChartHeight + mDashHeight / 2, mLabelPaint);
-                canvas.drawText(points.get(i).getLabel(), x, mHorizontalLabelY, mLabelPaint);
+                canvas.drawText(mLabels.get(i), x, mHorizontalLabelY, mLabelPaint);
             }
 
             // vertical data
@@ -186,7 +188,7 @@ public class LineChart extends RelativeLayout {
             for (LineChartData line : mLines) {
                 if (line.isEnabled()) {
                     int color = line.getColor();
-                    points = line.getPoints();
+                    List<LineChartPoint> points = line.getPoints();
                     mDataBorderPaint.setColor(color);
                     double lastX = mCellWidth / 2 + mChartLeft;
                     int lastY = getYFromValue(points.get(0).getValue());
