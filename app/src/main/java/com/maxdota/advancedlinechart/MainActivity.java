@@ -17,6 +17,7 @@ import com.maxdota.advancedlinechart.model.Nav;
 import com.maxdota.advancedlinechart.model.Portfolio;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Abc on 25/06/2017.
@@ -84,16 +85,19 @@ public class MainActivity extends Activity {
             return;
         }
         mDisplayType = displayType;
-        processLineData();
+        processAndUpdateData();
     }
 
-    private void processFirebaseData() {
+    private void processAndUpdateData() {
         processLineData();
         updateChartUi();
     }
 
     private void updateChartUi() {
         mLineChart.initData("Amount", "Years", mMinValue, mMaxValue, mLines, mMaxPointsSize);
+    }
+
+    private void updateAppendix() {
         mLineChartAppendix.setData(mLines);
     }
 
@@ -110,7 +114,21 @@ public class MainActivity extends Activity {
 
         for (int i = 0; i < mPortfolios.size(); i++) {
             Portfolio portfolio = mPortfolios.get(i);
-            ArrayList<Nav> navs = portfolio.getNavs();
+            ArrayList<Nav> navs;
+            switch (mDisplayType) {
+                case DAILY:
+                    navs = portfolio.getNavs();
+                    break;
+                case MONTHLY:
+                    navs = portfolio.getMonthlyNavs();
+                    break;
+                case QUARTERLY:
+                    navs = portfolio.getQuarterlyNavs();
+                    break;
+                default:
+                    navs = new ArrayList<>();
+                    break;
+            }
             ArrayList<LineChartPoint> points = new ArrayList<>();
             int size = navs.size();
             if (size > mMaxPointsSize) {
@@ -137,7 +155,11 @@ public class MainActivity extends Activity {
             @Override
             public void onDataChanged(ArrayList<Portfolio> data) {
                 mPortfolios = data;
-                processFirebaseData();
+                for (Portfolio portfolio : mPortfolios) {
+                    Collections.sort(portfolio.getNavs());
+                }
+                processAndUpdateData();
+                updateAppendix();
             }
 
             @Override

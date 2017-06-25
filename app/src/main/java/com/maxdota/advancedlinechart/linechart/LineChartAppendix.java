@@ -83,6 +83,7 @@ public class LineChartAppendix extends ScrollView implements View.OnClickListene
         if (lines == null || lines.isEmpty()) {
             return;
         }
+        mContainer.removeAllViews();
         for (LineChartData lineData : lines) {
             AppendixItem item = new AppendixItem(getContext(), lineData.getColor(), lineData.getDataName());
             mContainer.addView(item, mItemWidth, mItemHeight);
